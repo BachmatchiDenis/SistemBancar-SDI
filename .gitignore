@@ -1,0 +1,27 @@
+# Fișiere compilate Java
+*.class
+bin/
+out/
+build/
+
+# Date persistente (conturi bancare)
+data/
+
+# Fișiere LaTeX auxiliare
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Fișiere IDE
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# Fișiere sistem
+.DS_Store
+Thumbs.db
