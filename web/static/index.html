@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Bancar Online</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Ecran de conectare la server -->
+        <div id="connection-screen" class="screen active">
+            <div class="card connection-card">
+                <div class="logo">
+                    <span class="logo-icon">🏦</span>
+                    <h1>Sistem Bancar</h1>
+                    <p class="subtitle">Conectare la Server</p>
+                </div>
+                <form id="connection-form">
+                    <div class="form-group">
+                        <label for="server-url">Adresa Server</label>
+                        <input type="text" id="server-url" value="" placeholder="http://localhost:8080" readonly>
+                        <small>Serverul curent</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <span class="btn-text">Conectare</span>
+                        <span class="btn-loading hidden">
+                            <span class="spinner"></span> Se conectează...
+                        </span>
+                    </button>
+                </form>
+                <div id="connection-error" class="error-message hidden"></div>
+            </div>
+        </div>
+
+        <!-- Ecran de autentificare -->
+        <div id="login-screen" class="screen">
+            <div class="card login-card">
+                <div class="logo">
+                    <span class="logo-icon">🔐</span>
+                    <h1>Autentificare</h1>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="account-number">Număr Cont</label>
+                        <input type="text" id="account-number" placeholder="RO1000000000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pin">Cod PIN</label>
+                        <input type="password" id="pin" placeholder="••••" maxlength="4" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <span class="btn-text">Autentificare</span>
+                        <span class="btn-loading hidden">
+                            <span class="spinner"></span> Se verifică...
+                        </span>
+                    </button>
+                </form>
+                <div class="divider"><span>sau</span></div>
+                <button id="show-register" class="btn btn-secondary btn-block">
+                    Creare Cont Nou
+                </button>
+                <button id="back-to-connection" class="btn btn-link btn-block">
+                    ← Înapoi
+                </button>
+                <div id="login-error" class="error-message hidden"></div>
+            </div>
+
+            <!-- Conturi demo -->
+            <div class="demo-accounts card">
+                <h3>📋 Conturi Demo</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cont</th>
+                            <th>Titular</th>
+                            <th>PIN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr onclick="fillDemo('RO1000000000', '1234')">
+                            <td>RO1000000000</td>
+                            <td>Ion Popescu</td>
+                            <td>1234</td>
+                        </tr>
+                        <tr onclick="fillDemo('RO1000000001', '5678')">
+                            <td>RO1000000001</td>
+                            <td>Maria Ionescu</td>
+                            <td>5678</td>
+                        </tr>
+                        <tr onclick="fillDemo('RO1000000002', '0000')">
+                            <td>RO1000000002</td>
+                            <td>Alexandru Gheorghe</td>
+                            <td>0000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <small>Click pe un rând pentru a completa automat</small>
+            </div>
+        </div>
+
+        <!-- Ecran înregistrare -->
+        <div id="register-screen" class="screen">
+            <div class="card register-card">
+                <div class="logo">
+                    <span class="logo-icon">📝</span>
+                    <h1>Cont Nou</h1>
+                </div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-name">Nume Titular</label>
+                        <input type="text" id="reg-name" placeholder="Ex: Ion Popescu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-pin">Cod PIN (4 cifre)</label>
+                        <input type="password" id="reg-pin" placeholder="••••" maxlength="4" pattern="\d{4}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-pin-confirm">Confirmare PIN</label>
+                        <input type="password" id="reg-pin-confirm" placeholder="••••" maxlength="4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-balance">Depozit Inițial (RON)</label>
+                        <input type="number" id="reg-balance" placeholder="0.00" min="0" step="0.01" value="0">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">
+                        <span class="btn-text">Creare Cont</span>
+                        <span class="btn-loading hidden">
+                            <span class="spinner"></span> Se creează...
+                        </span>
+                    </button>
+                </form>
+                <button id="back-to-login" class="btn btn-link btn-block">
+                    ← Înapoi la Autentificare
+                </button>
+                <div id="register-error" class="error-message hidden"></div>
+            </div>
+        </div>
+
+        <!-- Ecran principal (dashboard) -->
+        <div id="dashboard-screen" class="screen">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <span class="logo-icon">🏦</span>
+                    <span class="header-title">Sistem Bancar</span>
+                </div>
+                <div class="header-right">
+                    <span id="user-name" class="user-name">Bine ați venit!</span>
+                    <button id="logout-btn" class="btn btn-outline">Deconectare</button>
+                </div>
+            </header>
+
+            <!-- Conținut principal -->
+            <main class="dashboard-content">
+                <!-- Card Sold -->
+                <div class="balance-card card">
+                    <div class="balance-info">
+                        <span class="balance-label">Sold Disponibil</span>
+                        <span id="balance-amount" class="balance-amount">0.00 RON</span>
+                    </div>
+                    <div class="account-info">
+                        <span id="account-display" class="account-number">RO0000000000</span>
+                        <button id="refresh-btn" class="btn btn-icon" title="Actualizare">🔄</button>
+                    </div>
+                </div>
+
+                <!-- Operațiuni -->
+                <div class="operations-grid">
+                    <!-- Depunere -->
+                    <div class="operation-card card">
+                        <div class="operation-header">
+                            <span class="operation-icon">💰</span>
+                            <h3>Depunere</h3>
+                        </div>
+                        <p class="operation-desc">Adăugați fonduri în cont</p>
+                        <form id="deposit-form" class="operation-form">
+                            <div class="form-group">
+                                <label>Sumă (RON)</label>
+                                <input type="number" id="deposit-amount" placeholder="0.00" min="0.01" step="0.01" required>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">Depune</button>
+                        </form>
+                    </div>
+
+                    <!-- Retragere -->
+                    <div class="operation-card card">
+                        <div class="operation-header">
+                            <span class="operation-icon">💸</span>
+                            <h3>Retragere</h3>
+                        </div>
+                        <p class="operation-desc">Retrageți fonduri din cont</p>
+                        <form id="withdraw-form" class="operation-form">
+                            <div class="form-group">
+                                <label>Sumă (RON)</label>
+                                <input type="number" id="withdraw-amount" placeholder="0.00" min="0.01" step="0.01" required>
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-block">Retrage</button>
+                        </form>
+                    </div>
+
+                    <!-- Transfer -->
+                    <div class="operation-card card">
+                        <div class="operation-header">
+                            <span class="operation-icon">💳</span>
+                            <h3>Transfer</h3>
+                        </div>
+                        <p class="operation-desc">Transferați către alt cont</p>
+                        <form id="transfer-form" class="operation-form">
+                            <div class="form-group">
+                                <label>Cont Destinație</label>
+                                <input type="text" id="transfer-to" placeholder="RO..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sumă (RON)</label>
+                                <input type="number" id="transfer-amount" placeholder="0.00" min="0.01" step="0.01" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Transferă</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Istoric Tranzacții -->
+                <div class="transactions-card card">
+                    <div class="transactions-header">
+                        <h3>📋 Istoric Tranzacții</h3>
+                        <button id="refresh-transactions" class="btn btn-outline btn-sm">Actualizare</button>
+                    </div>
+                    <div class="transactions-table-wrapper">
+                        <table id="transactions-table" class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Data/Ora</th>
+                                    <th>Tip</th>
+                                    <th>Sumă</th>
+                                    <th>Descriere</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-body">
+                                <tr>
+                                    <td colspan="4" class="empty-message">Nu există tranzacții</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal pentru notificări -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modal-icon" class="modal-icon">✓</span>
+                <h3 id="modal-title">Succes</h3>
+            </div>
+            <p id="modal-message">Operațiune efectuată cu succes!</p>
+            <button id="modal-close" class="btn btn-primary">OK</button>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
